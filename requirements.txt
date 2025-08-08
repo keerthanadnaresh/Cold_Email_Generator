@@ -6,6 +6,4 @@ chromadb==0.5.0
 pandas==2.0.3
 unstructured==0.10.30
 python-dotenv==1.0.0
-requests==2.31.0
-beautifulsoup4==4.12.2
 torch==2.8.0
