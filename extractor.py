@@ -1,10 +1,11 @@
-import os
-from dotenv import load_dotenv
+import re
+import json
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_groq import ChatGroq
-import json
+import os
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -12,41 +13,44 @@ def extract_job_details(url):
     try:
         loader = WebBaseLoader(url)
         docs = loader.load()
-        content = docs[0].page_content[:4000]  # limit input size
+        page_content = docs[0].page_content.strip()[:4000]  # limit size
 
         prompt = PromptTemplate(
             input_variables=["page_data"],
             template="""
-You are an AI assistant. Extract the following from the page content below and respond ONLY with JSON:
+Extract ONLY this JSON object from the job description:
 
-- title
-- role (as a paragraph)
-- skills (as a list of strings)
+{
+  "title": "...",
+  "role": "...",
+  "skills": ["...", "...", "..."]
+}
 
-Return ONLY the JSON.
+No extra text, no markdown.
 
-PAGE CONTENT:
+Job description:
 {page_data}
 """
         )
 
         llm = ChatGroq(
-            temperature=0.3,
+            temperature=0,
             model_name="llama3-8b-8192",
             groq_api_key=os.getenv("GROQ_API_KEY")
         )
 
-        chain = LLMChain(prompt=prompt, llm=llm)
-        result = chain.invoke({"page_data": content})
-        raw_text = result.get("text", result)
+        chain = LLMChain(llm=llm, prompt=prompt)
+        result = chain.invoke({"page_data": page_content})
+        raw_text = result.get("text", "").strip()
 
-        # Try to extract JSON block
-        start = raw_text.find("{")
-        end = raw_text.rfind("}") + 1
-        json_text = raw_text[start:end]
-        job_info = json.loads(json_text)
-        return job_info
+        # Extract JSON from anywhere in the output
+        match = re.search(r"\{.*\}", raw_text, re.DOTALL)
+        if match:
+            json_text = match.group()
+            return json.loads(json_text)
+        else:
+            return {"title": "", "role": "", "skills": []}
 
     except Exception as e:
-        print("❌ Error:", e)
-        return None
+        print("❌ Error extracting job info:", e)
+        return {"title": "", "role": "", "skills": []}

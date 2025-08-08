@@ -12,8 +12,8 @@ url = st.text_input("🔗 Enter Careers Page URL")
 if st.button("Generate Cold Email") and url:
     job_info = extract_job_details(url)
     if job_info:
-        st.subheader("📝 Job Info")
-        st.json(job_info)
+        #st.subheader("📝 Job Info")
+       # st.json(job_info)
 
         portfolio_links = get_portfolio_links(job_info["skills"])
         email = generate_cold_email(job_info, portfolio_links)
