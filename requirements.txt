@@ -3,7 +3,6 @@ langchain-community==0.2.10
 langchain-groq==0.1.6
 chromadb==0.4.15
 pandas==2.2.2
-numpy==1.26.4
 unstructured==0.10.30
 streamlit==1.35.0
 python-dotenv==1.0.0
