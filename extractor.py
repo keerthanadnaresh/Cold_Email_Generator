@@ -1,7 +1,7 @@
 import os
 import json
 import re
-from langchain_community.document_loaders.web import WebBaseLoader  # ✅ fixed import
+from langchain_community.document_loaders import WebBaseLoader
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from langchain.chains import LLMChain
