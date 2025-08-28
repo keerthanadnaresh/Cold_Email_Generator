@@ -1,10 +1,9 @@
 langchain==0.2.11
-langchain-community==0.2.10
+langchain-community[web]==0.2.10
 langchain-groq==0.1.6
 chromadb==0.4.15
 pandas==2.2.2
 unstructured==0.10.30
 streamlit==1.35.0
 python-dotenv==1.0.0
-dotenv
 beautifulsoup4==4.12.3
