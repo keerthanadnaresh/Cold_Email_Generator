@@ -1,14 +1,12 @@
 import os
 import json
 import re
-from dotenv import load_dotenv
 from langchain_community.document_loaders import WebBaseLoader
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from langchain.chains import LLMChain
 
-# ✅ Load environment variables
-load_dotenv()
+# ✅ Set USER_AGENT for scraping
 os.environ["USER_AGENT"] = "Mozilla/5.0 (compatible; ColdEmailBot/1.0; +https://github.com/keerthanadevi)"
 
 def extract_job_details(url):
@@ -17,11 +15,11 @@ def extract_job_details(url):
         loader = WebBaseLoader(url)
         docs = loader.load()
 
-        # ✅ LLM with explicit API key
+        # ✅ LLM with API key from Streamlit Secrets / Env
         llm = ChatGroq(
             model="llama3-8b-8192",
             temperature=0,
-            api_key=os.getenv("GROQ_API_KEY")
+            api_key=os.environ.get("GROQ_API_KEY")  # now reads from Streamlit secrets
         )
 
         prompt = PromptTemplate(
@@ -36,7 +34,7 @@ def extract_job_details(url):
         chain = LLMChain(llm=llm, prompt=prompt)
         result = chain.run(page_content=docs[0].page_content)
 
-        # Try parsing JSON safely
+        # ✅ Parse JSON safely
         try:
             job_info = json.loads(result)
         except json.JSONDecodeError:
