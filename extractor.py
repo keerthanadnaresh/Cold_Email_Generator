@@ -17,7 +17,7 @@ def extract_job_details(url):
 
         # ✅ LLM with API key from Streamlit Secrets / Env
         llm = ChatGroq(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             temperature=0,
             api_key=os.environ.get("GROQ_API_KEY")  # now reads from Streamlit secrets
         )

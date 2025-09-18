@@ -10,7 +10,7 @@ load_dotenv()
 def generate_cold_email(job_info, portfolio_links):
     try:
         llm = ChatGroq(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             temperature=0.3,
             api_key=os.getenv("GROQ_API_KEY")
         )

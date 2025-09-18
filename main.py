@@ -5,7 +5,7 @@ from emailer import generate_cold_email
 
 st.set_page_config(page_title="Cold Email Generator", layout="centered")
 st.title("📧 Cold Email Generator")
-st.markdown("Generate personalized cold emails based on job listings.")
+st.markdown("Generates personalized cold emails based on job listings.")
 
 url = st.text_input("🔗 Enter Careers Page URL")
 
